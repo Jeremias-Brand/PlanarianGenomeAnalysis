@@ -1,0 +1,15 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - fastqc=0.11.9
+  - bwa=0.7.17 
+  - bowtie2=2.4.2 
+  - samtools=1.11 
+  - picard=2.24.2 
+  - gatk4=4.2.0.0
+  - cutadapt=3.2 
+  - biopet-validatefastq=0.1.1 
+  - bamtools=2.5.1
+  - trimmomatic=0.39
+

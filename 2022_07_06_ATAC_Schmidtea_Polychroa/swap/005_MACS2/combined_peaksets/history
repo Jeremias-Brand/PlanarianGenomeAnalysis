@@ -1,0 +1,38 @@
+#combining peaksets
+chipr \
+--input ../chr_SP_1_ds_peaks.narrowPeak ../chr_SP_2_ds_peaks.narrowPeak ../chr_SP_3_ds_peaks.narrowPeak ../chr_SPX_1_ds_peaks.narrowPeak ../chr_SPX_2_ds_peaks.narrowPeak ../chr_SPX_3_ds_peaks.narrowPeak \
+--minentries 3 \
+--output chr_Spol_peaks
+
+#transform to bed6
+awk -F "\t" 'BEGIN {OFS="\t"} {print $1,$2,$3,$4,$5,$6}' chr_Spol_peaks_all.bed | sort -k1,1 -k2,2n > chr_Spol_peaks_all.bed6
+
+###combine
+#closest
+for i in ../chr_SP_1_ds_summits.bed ../chr_SP_2_ds_summits.bed ../chr_SP_3_ds_summits.bed \
+../chr_SPX_1_ds_summits.bed ../chr_SPX_2_ds_summits.bed ../chr_SPX_3_ds_summits.bed \
+; do  bedtools closest -d -t first -a chr_Spol_peaks_all.bed6 -b $i | awk -F "\t" 'BEGIN {OFS="\t"} {if ($12 == 0 ) print $0,$8-$2 }' > chr_Spol_peaks_all_${i#../}; done
+
+#add_summit information
+python3 adding_summit_combined.py \
+--Summits_1 chr_Spol_peaks_all_chr_SP_1_ds_summits.bed \
+--Summits_2 chr_Spol_peaks_all_chr_SP_2_ds_summits.bed \
+--Summits_3 chr_Spol_peaks_all_chr_SP_3_ds_summits.bed \
+--Summits_4 chr_Spol_peaks_all_chr_SPX_1_ds_summits.bed \
+--Summits_5 chr_Spol_peaks_all_chr_SPX_2_ds_summits.bed \
+--Summits_6 chr_Spol_peaks_all_chr_SPX_3_ds_summits.bed \
+--Peaks chr_Spol_peaks_all.bed --Output chr_Spol_peaks_all
+
+#narrowPeak
+awk -F "\t" 'BEGIN {OFS="\t"} {if ($10==0) print $1,$2,$3,$4,$5,$6,$7,$8,$9, int(($3-$2)/2); else print $0}' chr_Spol_peaks_all | sort -k1,1 -k2,2n > chr_Spol_combined_peaks.narrowPeak
+#summit
+awk -F "\t" 'BEGIN {OFS="\t"} {if ($10 > 0) print $1,$2+$10,$2+$10+1,$1"_"$2"_"$3,$5,$6}' chr_Spol_combined_peaks.narrowPeak | sort -k1,1 -k2,2n > chr_Spol_combined_summits.bed
+
+# run R
+library(GenomicFeatures)
+library(ChIPseeker)
+txdb <- makeTxDbFromGFF("../../../bwa_index_Spol/annotations/Spol.ENCODE_hybrid_annot.sort.gff3", format="gff3", dataSource=NA, organism=NA, taxonomyId=NA, chrominfo=NULL, miRBaseBuild=NA)
+peakAnno_ATAC <- annotatePeak("chr_Spol_combined_summits.bed", TxDb = txdb, level = "transcript", assignGenomicAnnotation = TRUE, genomicAnnotationPriority = c("Promoter", "Exon", "Intron", "Intergenic"), annoDb = NULL, addFlankGeneInfo = FALSE, flankDistance = 5000, sameStrand = FALSE, ignoreOverlap = FALSE, ignoreUpstream = FALSE, ignoreDownstream = FALSE, overlap = "TSS", verbose = TRUE)
+svg("chr_Spol_combined_summits.bed.svg", width=20, height=10)
+upsetplot(peakAnno_ATAC, vennpie=TRUE)
+dev.off()

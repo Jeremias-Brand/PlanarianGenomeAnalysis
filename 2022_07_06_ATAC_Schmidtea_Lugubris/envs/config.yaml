@@ -1,0 +1,20 @@
+#create dictionary for sequencing files
+samples:
+        L109310_merged: SL_1_1
+        L109311_merged: SL_1_2
+        L109312_merged: SL_1_3
+        L109313_merged: SL_2_1
+        L109314_merged: SL_2_2
+        L109315_merged: SL_2_3
+        L109316_merged: SL_3_1
+        L109317_merged: SL_3_2
+        L109318_merged: SL_3_3
+        L109319_merged: SLX_1_1
+        L109320_merged: SLX_1_2
+        L109321_merged: SLX_1_3
+        L109322_merged: SLX_2_1
+        L109323_merged: SLX_2_2
+        L109324_merged: SLX_2_3
+        L109325_merged: SLX_3_1
+        L109326_merged: SLX_3_2
+        L109327_merged: SLX_3_3

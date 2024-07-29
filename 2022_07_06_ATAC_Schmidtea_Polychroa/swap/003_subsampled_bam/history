@@ -1,0 +1,22 @@
+#subsampling
+samtools view -h -b -s 1.32 ../002_merged_bam/SP_1_sorted.bam > SP_1_ds.bam
+samtools view -h -b -s 1.32 ../002_merged_bam/SP_2_sorted.bam > SP_2_ds.bam
+samtools view -h -b -s 1.40 ../002_merged_bam/SP_3_sorted.bam > SP_3_ds.bam
+samtools view -h -b -s 1.47 ../002_merged_bam/SPX_1_sorted.bam > SPX_1_ds.bam
+cp ../002_merged_bam/SPX_2_sorted.bam SPX_2_ds.bam
+samtools view -h -b -s 1.96 ../002_merged_bam/SPX_3_sorted.bam > SPX_3_ds.bam
+
+samtools view -h -b -s 1.64 ../002_merged_bam/SPH_1_sorted.bam > SPH_1_ds.bam
+samtools view -h -b -s 1.64 ../002_merged_bam/SPH_2_sorted.bam > SPH_2_ds.bam
+samtools view -h -b -s 1.68 ../002_merged_bam/SPH_3_sorted.bam > SPH_3_ds.bam
+samtools view -h -b -s 1.60 ../002_merged_bam/SPT_1_sorted.bam > SPT_1_ds.bam
+cp ../002_merged_bam/SPT_2_sorted.bam SPT_2_ds.bam
+samtools view -h -b -s 1.84 ../002_merged_bam/SPT_3_sorted.bam > SPT_3_ds.bam
+
+#sort and index
+for i in *bam; do samtools sort -@50 -o ${i%.bam}_sorted.bam $i;done
+for i in *sorted.bam; do samtools index $i;done
+for i in !(*sorted*).bam; do samtools sort -n $i -@50 -o ${i%.bam}_n_sorted.bam; done
+
+
+for i in merged; do ( cd "$i" && for j in *_pileup.bdg; do bedGraphToBigWig $j ../../bwa_index_Spol/chrom.sizes ${j%.bdg}.bw && mv ${j%.bdg}.bw ../merged/.; done ); done

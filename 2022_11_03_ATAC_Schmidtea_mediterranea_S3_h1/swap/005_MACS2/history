@@ -1,0 +1,35 @@
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam} \
+--bdg \
+--keep-dup all \
+-g 6.44e8 \
+; done
+
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam}_SPMR \
+--SPMR \
+--outdir ${i%_sorted.bam}_SPMR \
+--bdg \
+--keep-dup all \
+-g 6.44e8 \
+; done
+
+
+##NOTE
+#MACS2 Segmentation fault
+
+#move files here
+
+#transform to bw
+for i in retransformed_*; do bedGraphToBigWig $i ../../bwa_index_schMedS3_h1/chrom.sizes ${i%.bdg}.bw; done
+
+#remove non chr peaks
+for i in *_peaks.xls ; do cat $i | grep "chr" > chr_${i}; done
+for i in *.narrowPeak ; do cat $i | grep "chr" > chr_${i}; done
+for i in *_summits.bed ; do cat $i | grep "chr" > chr_${i}; done

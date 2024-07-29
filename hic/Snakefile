@@ -1,0 +1,11 @@
+configfile: "config/config.yaml"
+
+include:"workflow/rules/main.smk"
+include:"workflow/rules/fetch_sra.smk"
+
+rule all:
+    input:
+        rules.all_pairs.output,
+        rules.all_cool.output
+    output:
+        touch("done__all")

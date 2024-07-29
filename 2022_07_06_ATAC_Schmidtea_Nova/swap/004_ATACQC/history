@@ -1,0 +1,83 @@
+##for splitting reads manually
+#nucleosome-free bin (38–100 bp)
+#intermediate bin 1 (100–180 bp)
+#mono-nucleosome bin (180–247 bp)
+#intermediate bin 2 (247–315 bp)
+#di-nucleosome bin (315–473 bp)
+#intermediate bin 3 (473–558 bp)
+#tri-nucleosome bin (558–615 bp)
+#others (615–2000 bp)
+
+
+declare -A associative
+associative=([../002_merged_bam/SN_1_sorted.bam]=wt1_ATAC \
+[../002_merged_bam/SN_2_sorted.bam]=wt2_ATAC \
+[../002_merged_bam/SN_3_sorted.bam]=wt3_ATAC \
+[../002_merged_bam/SNX_1_sorted.bam]=xray1_ATAC \
+[../002_merged_bam/SNX_2_sorted.bam]=xray2_ATAC \
+[../002_merged_bam/SNX_3_sorted.bam]=xray3_ATAC \
+[../../lib/L109283_merged_csm_no_dup_mapped_q20.bam]=xray_1_1_ATAC \
+[../../lib/L109284_merged_csm_no_dup_mapped_q20.bam]=xray_1_2_ATAC \
+[../../lib/L109285_merged_csm_no_dup_mapped_q20.bam]=xray_1_3_ATAC \
+[../../lib/L104880_Track-147014_csm_no_dup_mapped_q20.bam]=wt_1_3_ATAC \
+[../../lib/L104879_Track-147013_csm_no_dup_mapped_q20.bam]=wt_1_2_ATAC \
+[../../lib/L104878_merged_csm_no_dup_mapped_q20.bam]=wt_1_1_ATAC )
+
+for i in ${!associative[@]}; do \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 38 && $9<=100) || ($9<=-38 && $9>=-100)' | samtools view -b > split_bam/NFR_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 180 && $9<=247) || ($9<=-180 && $9>=-247)' | samtools view -b > split_bam/mononucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 315 && $9<=473) || ($9<=-315 && $9>=-473)' | samtools view -b > split_bam/dinucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 558 && $9<=615) || ($9<=-558 && $9>=-615)' | samtools view -b > split_bam/trinucleosomal_${associative[$i]}.bam \
+; done
+
+#prepare folder
+create Rscript
+cp ../../bwa_index_Snov/schNov1_split_BSgenome/schNov1_split.chrom.sizes schNov1_split_chrominfo.tsv
+cp ../../bwa_index_Snov/annotations/schNov1_ENCODE_hybrid_all.gff3 .
+python3 transformation_Snova.py schNov1_ENCODE_hybrid_all.gff3 tmp_sgc_schNov1_ENCODE_hybrid_all.gff3
+sort -k1,1 -k4,4n tmp_sgc_schNov1_ENCODE_hybrid_all.gff3 > sgc_schNov1_ENCODE_hybrid_all.gff3 
+
+#run R 
+#run R 
+library(GenomicFeatures)
+library(Rsamtools)
+library(ATACseqQC)
+library(BSgenome.Snova.mpinat.schNov1Split)
+library(ChIPpeakAnno)
+
+#possible Bam tags
+possibleTag <- list("integer"=c("AM", "AS", "CM", "CP", "FI", "H0", "H1", "H2", 
+	                        "HI", "IH", "MQ", "NH", "NM", "OP", "PQ", "SM",
+	                        "TC", "UQ"), 
+	            "character"=c("BC", "BQ", "BZ", "CB", "CC", "CO", "CQ", "CR",
+	                          "CS", "CT", "CY", "E2", "FS", "LB", "MC", "MD",
+	                          "MI", "OA", "OC", "OQ", "OX", "PG", "PT", "PU",
+	                          "Q2", "QT", "QX", "R2", "RG", "RX", "SA", "TS",
+	                          "U2"))
+#custom txdbs for:
+chrominfo <- read.delim(file = "schNov1_split_chrominfo.tsv",header = FALSE,sep = "\t",quote = "",col.names = c("chrom","length"))
+snov_seqinfo <- Seqinfo(chrominfo$chrom, seqlengths=chrominfo$length, isCircular=NA, genome='schNov1_split')
+
+meta_txdb <- data.frame(name = c('organism','genome'),
+	                value = c('Schmidtea nova','schNov1Split'))
+snov_TxdB <- makeTxDbFromGFF(file = "sgc_schNov1_ENCODE_hybrid_all.gff3",
+	                     format = "gff3",
+	                     dataSource = "annotation file made through collaboration between L. Pandolfini and J. Rink laboratories",
+	                     organism = "Schmidtea nova",
+	                     taxonomyId = 163373,
+	                     circ_seqs = character(0),
+	                     chrominfo = snov_seqinfo,
+	                     metadata = meta_txdb
+)
+
+seqinformation_txdb <- seqinfo(snov_TxdB)
+txs <- transcripts(snov_TxdB)
+genome <- Snova
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+TSS_snov <- promoters(txs, upstream=0, downstream=1)
+TSS_snov <- unique(TSS_snov)
+save.image(file = "ATACseqQC.RData")	
+#
+
+#running
+for i in wt1_ATAC wt2_ATAC wt3_ATAC xray1_ATAC xray2_ATAC xray3_ATAC wt_1_1_ATAC wt_1_2_ATAC wt_1_3_ATAC xray_1_1_ATAC xray_1_2_ATAC xray_1_3_ATAC; do Rscript nucleosomal_positioning.R $i ${i}_Snov ; done

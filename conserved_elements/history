@@ -1,0 +1,23 @@
+# uniform peak files for liftover analysis
+./make_uniform_peaks.sh ATAC_peak_files/chr_Slug_combined_summits.bed data/schLug1.chromsize      ATAC_peak_files/schLug1  
+./make_uniform_peaks.sh ATAC_peak_files/chr_Smed_combined_summits.bed data/schMedS3h1.chromsize   ATAC_peak_files/schMedS3h1  
+./make_uniform_peaks.sh ATAC_peak_files/chr_Snov_combined_summits.bed data/schNov1.chromsize      ATAC_peak_files/schNov1  
+./make_uniform_peaks.sh ATAC_peak_files/chr_Spol_combined_summits.bed data/schPol2.chromsize      ATAC_peak_files/schPol2
+
+# liftover schMedS3h1 to the other species using cactus whole genome alignment
+./ATAC_liftover.sh
+
+# find peak conservation
+Rscript --vanilla ./granges_liftover.R
+
+
+# Analysis with the full not uniform peak size
+## smed has a _ in the chr nameing 
+DIR='./ATAC_peak_files/'
+awk  'BEGIN {OFS="\t"} {split($4, a, "_"); $2=a[3]; $3=a[4]; print $1, $2, $3, $4}' ${DIR}chr_Smed_combined_summits.bed > ${DIR}schMedS3h1_full_peak.tab
+
+
+awk 'BEGIN {OFS="\t"} {split($4, a, "_"); $1=a[1]; $2=a[2]; $3=a[3]; print $1, $2, $3, $4}' ${DIR}chr_Spol_combined_summits.bed > ${DIR}schPol2_full_peak.tab
+awk  'BEGIN {OFS="\t"} {split($4, a, "_"); $1=a[1]; $2=a[2]; $3=a[3]; print $1, $2, $3, $4}' ${DIR}chr_Snov_combined_summits.bed > ${DIR}schNov1_full_peak.tab
+awk  'BEGIN {OFS="\t"} {split($4, a, "_"); $1=a[1]; $2=a[2]; $3=a[3]; print $1, $2, $3, $4}' ${DIR}chr_Slug_combined_summits.bed > ${DIR}schLug1_full_peak.tab
+

@@ -1,0 +1,19 @@
+#subsampling
+samtools view -h -b -s 1.59 ../002_merged_bam/SN_1_sorted.bam > SN_1_ds.bam
+samtools view -h -b -s 1.45 ../002_merged_bam/SN_2_sorted.bam > SN_2_ds.bam
+samtools view -h -b -s 1.77 ../002_merged_bam/SN_3_sorted.bam > SN_3_ds.bam
+samtools view -h -b -s 1.89 ../002_merged_bam/SNX_1_sorted.bam >  SNX_1_ds.bam
+samtools view -h -b -s 1.70 ../002_merged_bam/SNX_2_sorted.bam >  SNX_2_ds.bam
+cp ../002_merged_bam/SNX_3_sorted.bam SNX_3_ds.bam
+
+samtools view -h -b -s 1.61 ../002_merged_bam/SNH_1_sorted.bam > SNH_1_ds.bam
+samtools view -h -b -s 1.40 ../002_merged_bam/SNH_2_sorted.bam > SNH_2_ds.bam
+samtools view -h -b -s 1.53 ../002_merged_bam/SNH_3_sorted.bam > SNH_3_ds.bam
+samtools view -h -b -s 1.99 ../002_merged_bam/SNT_1_sorted.bam > SNT_1_ds.bam
+samtools view -h -b -s 1.45 ../002_merged_bam/SNT_2_sorted.bam > SNT_2_ds.bam
+cp ../002_merged_bam/SNT_3_sorted.bam SNT_3_ds.bam
+
+#sort and index
+for i in *bam; do samtools sort -@50 -o ${i%.bam}_sorted.bam $i;done
+for i in *sorted.bam; do samtools index $i;done
+for i in !(*sorted*).bam; do samtools sort -n $i -@50 -o ${i%.bam}_n_sorted.bam; done

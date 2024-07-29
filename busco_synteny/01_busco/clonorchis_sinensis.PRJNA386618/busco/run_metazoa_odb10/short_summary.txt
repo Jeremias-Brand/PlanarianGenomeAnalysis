@@ -1,0 +1,15 @@
+# BUSCO version is: 5.0.0 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2021-02-17, number of species: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /projects/jere/2022-busco-syn/lib/genomes/clonorchis_sinensis.PRJNA386618.fa
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:66.6%[S:66.1%,D:0.5%],F:9.0%,M:24.4%,n:954	   
+	636	Complete BUSCOs (C)			   
+	631	Complete and single-copy BUSCOs (S)	   
+	5	Complete and duplicated BUSCOs (D)	   
+	86	Fragmented BUSCOs (F)			   
+	232	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   

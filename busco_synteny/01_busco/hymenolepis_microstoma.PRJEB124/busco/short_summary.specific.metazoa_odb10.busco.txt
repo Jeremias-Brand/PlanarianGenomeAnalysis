@@ -1,0 +1,15 @@
+# BUSCO version is: 5.0.0 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2021-02-17, number of species: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /projects/jere/2022-busco-syn/lib/genomes/hymenolepis_microstoma.PRJEB124.fa
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:67.1%[S:65.6%,D:1.5%],F:6.2%,M:26.7%,n:954	   
+	640	Complete BUSCOs (C)			   
+	626	Complete and single-copy BUSCOs (S)	   
+	14	Complete and duplicated BUSCOs (D)	   
+	59	Fragmented BUSCOs (F)			   
+	255	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   

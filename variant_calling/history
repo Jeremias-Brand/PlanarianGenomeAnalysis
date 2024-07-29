@@ -1,0 +1,15 @@
+
+ln -s /projects/jere/data/illumina/2022-ind-seq/L106442_Track-150069_R1.fastq.gz /projects/jere/2022-ind-seq/PE/01_raw/sex_B_1.fastq.gz
+ln -s /projects/jere/data/illumina/2022-ind-seq/L106442_Track-150069_R2.fastq.gz /projects/jere/2022-ind-seq/PE/01_raw/sex_B_2.fastq.gz
+ln -s /projects/jere/data/illumina/2022-ind-seq/L106443_Track-150070_R1.fastq.gz /projects/jere/2022-ind-seq/PE/01_raw/sex_C_1.fastq.gz
+ln -s /projects/jere/data/illumina/2022-ind-seq/L106443_Track-150070_R2.fastq.gz /projects/jere/2022-ind-seq/PE/01_raw/sex_C_2.fastq.gz
+# cat files
+cat /projects/jere/data/illumina/2022-ind-seq/L106441_Track-150068_R1.fastq.gz > /projects/jere/2022-ind-seq/PE/01_raw/sex_A_1.fastq.gz
+cat /projects/jere/data/illumina/2022-ind-seq/L106441_Track-150068_R2.fastq.gz > /projects/jere/2022-ind-seq/PE/01_raw/sex_A_2.fastq.gz
+cat /projects/jere/data/illumina/2022-ind-seq/L106441_Track-150612_R1.fastq.gz >> /projects/jere/2022-ind-seq/PE/01_raw/sex_A_1.fastq.gz
+cat /projects/jere/data/illumina/2022-ind-seq/L106441_Track-150612_R2.fastq.gz >> /projects/jere/2022-ind-seq/PE/01_raw/sex_A_2.fastq.gz
+
+# make a stats file
+for f in $(  find PE/05_filter/ -name "*bcf" );do
+    bcftools stats $f > PE/QC/${f##*/}.stats
+done

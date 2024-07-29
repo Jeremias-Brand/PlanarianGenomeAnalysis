@@ -1,0 +1,9 @@
+channels:
+  - bioconda
+  - conda-forge
+  - r
+dependencies:
+  - r
+  - r-essentials
+  - r-vcfR=1.12.0
+

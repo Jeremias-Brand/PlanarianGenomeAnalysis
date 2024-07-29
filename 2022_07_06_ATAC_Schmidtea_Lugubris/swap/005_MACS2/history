@@ -1,0 +1,36 @@
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam} \
+--bdg \
+--keep-dup all \
+-g 9.17e8 \
+; done
+
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam}_SPMR \
+--SPMR \
+--outdir ${i%_sorted.bam}_SPMR \
+--bdg \
+--keep-dup all \
+-g 9.17e8 \
+; done
+
+#move files here
+
+##NOTE
+#MACS2 Segmentation fault
+
+#remove non chr peaks
+for i in *_peaks.xls ; do cat $i | grep "chr" > chr_${i}; done
+for i in *.narrowPeak ; do cat $i | grep "chr" > chr_${i}; done
+for i in *_summits.bed ; do cat $i | grep "chr" > chr_${i}; done
+
+#convert to non-split genome coordinates
+for i in *summits.bed; do awk -F "\t" 'BEGIN {OFS="\t"} {if($1=="chr5") print "chr1",$2+414900000,$3+414900000,$4,$5; else print $0}' $i | sort -k 1,1 -k2,2n  > nsgc_${i}; done
+#convert to non-split genome coordinates
+for i in chr*_ds_peaks.narrowPeak; do awk -F "\t" 'BEGIN {OFS="\t"} {if($1=="chr5") print "chr1",$2+414900000,$3+414900000,$4,$5,$6,$7,$8,$9,$10; else print $0}' $i | sort -k 1,1 -k2,2n  > nsgc_${i}; done

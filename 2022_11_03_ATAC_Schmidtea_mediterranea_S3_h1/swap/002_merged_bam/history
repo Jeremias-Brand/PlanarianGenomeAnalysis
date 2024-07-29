@@ -1,0 +1,60 @@
+#merge samtools 1.11 Using htslib 1.11-4
+samtools merge SMT_1.bam ../../lib/L79894_Track-124350_csm_no_dup_mapped_q20.bam ../../lib/L79895_Track-124354_csm_no_dup_mapped_q20.bam
+samtools merge SMT_2.bam ../../lib/L79896_Track-124348_csm_no_dup_mapped_q20.bam ../../lib/L79897_Track-124344_csm_no_dup_mapped_q20.bam ../../lib/L79898_Track-124357_csm_no_dup_mapped_q20.bam
+samtools merge SMT_3.bam ../../lib/L104862_Track-146996_csm_no_dup_mapped_q20.bam ../../lib/L104863_Track-146997_csm_no_dup_mapped_q20.bam ../../lib/L104864_Track-146998_csm_no_dup_mapped_q20.bam
+samtools merge SMTT_1.bam ../../lib/L79881_Track-124361_csm_no_dup_mapped_q20.bam ../../lib/L79882_Track-124362_csm_no_dup_mapped_q20.bam ../../lib/L79883_Track-124363_csm_no_dup_mapped_q20.bam
+samtools merge SMTT_2.bam ../../lib/L79884_Track-124365_csm_no_dup_mapped_q20.bam ../../lib/L79885_Track-124360_csm_no_dup_mapped_q20.bam ../../lib/L79886_Track-124364_csm_no_dup_mapped_q20.bam
+samtools merge SMH_1.bam ../../lib/L79899_Track-124333_csm_no_dup_mapped_q20.bam ../../lib/L79900_Track-124329_csm_no_dup_mapped_q20.bam ../../lib/L79901_Track-124341_csm_no_dup_mapped_q20.bam
+samtools merge SMH_2.bam ../../lib/L79902_Track-124326_csm_no_dup_mapped_q20.bam ../../lib/L79903_Track-124337_csm_no_dup_mapped_q20.bam ../../lib/L79904_Track-124339_csm_no_dup_mapped_q20.bam
+samtools merge SMH_3.bam ../../lib/L104859_Track-146993_csm_no_dup_mapped_q20.bam ../../lib/L104860_Track-146994_csm_no_dup_mapped_q20.bam ../../lib/L104861_Track-146995_csm_no_dup_mapped_q20.bam
+samtools merge SMHT_1.bam ../../lib/L79887_Track-124368_csm_no_dup_mapped_q20.bam ../../lib/L79888_Track-124369_csm_no_dup_mapped_q20.bam ../../lib/L79889_Track-124366_csm_no_dup_mapped_q20.bam
+samtools merge SMHT_2.bam ../../lib/L79890_Track-124370_csm_no_dup_mapped_q20.bam ../../lib/L79891_Track-124371_csm_no_dup_mapped_q20.bam ../../lib/L79892_Track-124367_csm_no_dup_mapped_q20.bam
+samtools merge SMX_1.bam ../../lib/L79857_Track-124338_csm_no_dup_mapped_q20.bam ../../lib/L79858_Track-124336_csm_no_dup_mapped_q20.bam ../../lib/L79859_Track-124331_csm_no_dup_mapped_q20.bam
+samtools merge SMX_2.bam ../../lib/L79860_Track-124327_csm_no_dup_mapped_q20.bam ../../lib/L79861_Track-124334_csm_no_dup_mapped_q20.bam ../../lib/L79862_Track-124340_csm_no_dup_mapped_q20.bam
+samtools merge SMX_3.bam ../../lib/L79863_Track-124330_csm_no_dup_mapped_q20.bam ../../lib/L79864_Track-124332_csm_no_dup_mapped_q20.bam ../../lib/L79865_Track-124372_csm_no_dup_mapped_q20.bam
+samtools merge SMX_4.bam ../../lib/L79866_Track-124335_csm_no_dup_mapped_q20.bam ../../lib/L79867_Track-124342_csm_no_dup_mapped_q20.bam ../../lib/L79868_Track-124328_csm_no_dup_mapped_q20.bam
+samtools merge SM_1.bam ../../lib/L79869_Track-124356_csm_no_dup_mapped_q20.bam ../../lib/L79870_Track-124349_csm_no_dup_mapped_q20.bam ../../lib/L79871_Track-124355_csm_no_dup_mapped_q20.bam
+samtools merge SM_2.bam ../../lib/L79872_Track-124343_csm_no_dup_mapped_q20.bam ../../lib/L79873_Track-124359_csm_no_dup_mapped_q20.bam ../../lib/L79874_Track-124353_csm_no_dup_mapped_q20.bam
+samtools merge SM_3.bam ../../lib/L79875_Track-124358_csm_no_dup_mapped_q20.bam ../../lib/L79876_Track-124351_csm_no_dup_mapped_q20.bam ../../lib/L79877_Track-124352_csm_no_dup_mapped_q20.bam
+samtools merge SM_4.bam ../../lib/L79878_Track-124347_csm_no_dup_mapped_q20.bam ../../lib/L79879_Track-124346_csm_no_dup_mapped_q20.bam ../../lib/L79880_Track-124345_csm_no_dup_mapped_q20.bam
+
+
+#sort and index
+for i in *bam; do samtools sort -@40 -o ${i%.bam}_sorted.bam $i;done
+for i in *_sorted.bam; do samtools index $i;done
+
+#create stats file
+touch stats
+for i in {1..9};do printf "#placeholder$i\n" >> stats; done
+
+#stats
+for i in *_sorted.bam; do printf "\n $i \n" >> stats; samtools flagstat $i >>stats; done
+
+#extract readcounts
+awk '{line[NR] = $0} /bam/ {matched[NR]} END {for (nr in matched) for (n=nr; n<=nr+9; n+=9) print line[n]}' stats | awk '{printf "%s%s",$0,(NR%2?FS:RS)}' | sed 's/  /,/' | sed "s/ //g" |  sed 's/+.*$//' > readcounts.csv
+
+#lowest readcount
+awk -F "," 'NR == 1 || $2 < min {line = $0; min = $2}END{print line}' readcounts_wt_xray.csv
+
+awk -F "," 'NR == 1 || $2 < min {line = $0; min = $2}END{print line}' readcounts_head_tail.csv
+
+#subsample to the lowest readcount 
+#calculate factor for downsampling
+awk -F ","  '$0=$0","(84468402/$2)' readcounts_wt_xray.csv
+awk -F ","  '$0=$0","(38022060/$2)' readcounts_head_tail.csv
+
+#see 003_subsampled_bam
+
+declare -A associative
+associative=([SM_1_sorted.bam]=wt1_ATAC \
+[SM_2_sorted.bam]=wt2_ATAC \
+[SM_3_sorted.bam]=wt3_ATAC \
+[SMX_1_sorted.bam]=xray1_ATAC \
+[SMX_2_sorted.bam]=xray2_ATAC \
+[SMX_3_sorted.bam]=xray3_ATAC )
+
+#create fragmentsize graph (R version 4.1.0, bioconductor-atacseqqc 1.16.0)
+for i in ${!associative[@]}; do printf "library(ATACseqQC) \nbamfile <-\"$i\" \nbamfile.labels <- gsub(\"$i\", \"${associative[$i]}\", basename(bamfile)) \nfragSize <- fragSizeDist(bamfile, bamfile.labels)\n\n" > ${associative[$i]}.r && Rscript ${associative[$i]}.r && mv Rplots.pdf ${associative[$i]}_fragSizeDist.pdf; done
+
+#remove R scripts
+rm *.r

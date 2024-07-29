@@ -1,0 +1,3 @@
+#sort and index
+for i in *bam; do samtools sort -@50 -o ${i%.bam}_sorted.bam $i;done
+for i in *sorted.bam; do samtools index $i;done

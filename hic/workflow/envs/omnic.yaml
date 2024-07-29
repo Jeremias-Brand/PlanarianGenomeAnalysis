@@ -1,0 +1,11 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - parallel=20210622
+  - pairtools=0.3.0
+  - bwa=0.7.17
+  - samtools
+  - tabulate=0.8.9
+  - preseq=3.1.2  
+

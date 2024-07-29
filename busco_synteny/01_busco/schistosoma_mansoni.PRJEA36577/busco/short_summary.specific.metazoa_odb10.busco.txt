@@ -1,0 +1,15 @@
+# BUSCO version is: 5.0.0 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2021-02-17, number of species: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /projects/jere/2022-busco-syn/lib/genomes/schistosoma_mansoni.PRJEA36577.fa
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:71.5%[S:69.7%,D:1.8%],F:5.1%,M:23.4%,n:954	   
+	682	Complete BUSCOs (C)			   
+	665	Complete and single-copy BUSCOs (S)	   
+	17	Complete and duplicated BUSCOs (D)	   
+	49	Fragmented BUSCOs (F)			   
+	223	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   

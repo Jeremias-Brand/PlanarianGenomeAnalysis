@@ -1,0 +1,20 @@
+#create dictionary for sequencing files
+samples:
+        L104869_Track-147003: SP_1_1
+        L104870_Track-147004: SP_1_2
+        L104871_Track-147005: SP_1_3
+        L104872_Track-147006: SP_2_1
+        L104873_Track-147007: SP_2_2
+        L104874_Track-147008: SP_2_3
+        L104875_Track-147009: SP_3_1
+        L104876_Track-147010: SP_3_2
+        L104877_Track-147011: SP_3_3
+        L109256_merged: SPX_1_1
+        L109257_merged: SPX_1_2
+        L109258_merged: SPX_1_3
+        L109259_merged: SPX_2_1
+        L109260_merged: SPX_2_2
+        L109261_merged: SPX_2_3
+        L109262_merged: SPX_3_1
+        L109263_merged: SPX_3_2
+        L109264_merged: SPX_3_3

@@ -1,0 +1,19 @@
+# BUSCO version is: 5.3.2 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2021-02-17, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /projects/jere/2022-gqc/latest/dd_Smes_g4.fa
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:67.8%[S:60.4%,D:7.4%],F:9.5%,M:22.7%,n:954	   
+	647	Complete BUSCOs (C)			   
+	576	Complete and single-copy BUSCOs (S)	   
+	71	Complete and duplicated BUSCOs (D)	   
+	91	Fragmented BUSCOs (F)			   
+	216	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   
+
+Dependencies and versions:
+	hmmsearch: 3.1
+	metaeuk: 5.34c21f2

@@ -1,0 +1,166 @@
+##for splitting reads manually
+#nucleosome-free bin (38–100 bp)
+#intermediate bin 1 (100–180 bp)
+#mono-nucleosome bin (180–247 bp)
+#intermediate bin 2 (247–315 bp)
+#di-nucleosome bin (315–473 bp)
+#intermediate bin 3 (473–558 bp)
+#tri-nucleosome bin (558–615 bp)
+#others (615–2000 bp)
+
+declare -A associative
+associative=([../002_merged_bam/SM_1_sorted.bam]=wt1_ATAC \
+[../002_merged_bam/SM_2_sorted.bam]=wt2_ATAC \
+[../002_merged_bam/SM_3_sorted.bam]=wt3_ATAC \
+[../../lib/L79869_Track-124356_csm_no_dup_mapped_q20.bam]=wt_1_1_ATAC \
+[../../lib/L79870_Track-124349_csm_no_dup_mapped_q20.bam]=wt_1_2_ATAC \
+[../../lib/L79871_Track-124355_csm_no_dup_mapped_q20.bam]=wt_1_3_ATAC )
+
+for i in ${!associative[@]}; do \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 38 && $9<=100) || ($9<=-38 && $9>=-100)' | samtools view -b > split_bam/NFR_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 180 && $9<=247) || ($9<=-180 && $9>=-247)' | samtools view -b > split_bam/mononucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 315 && $9<=473) || ($9<=-315 && $9>=-473)' | samtools view -b > split_bam/dinucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 558 && $9<=615) || ($9<=-558 && $9>=-615)' | samtools view -b > split_bam/trinucleosomal_${associative[$i]}.bam \
+; done
+
+
+declare -A associative
+associative=([../002_merged_bam/SMX_1_sorted.bam]=xray1_ATAC \
+[../002_merged_bam/SMX_2_sorted.bam]=xray2_ATAC \
+[../002_merged_bam/SMX_3_sorted.bam]=xray3_ATAC \
+[../../lib/L79857_Track-124338_csm_no_dup_mapped_q20.bam]=xray_1_1_ATAC \
+[../../lib/L79858_Track-124336_csm_no_dup_mapped_q20.bam]=xray_1_2_ATAC \
+[../../lib/L79859_Track-124331_csm_no_dup_mapped_q20.bam]=xray_1_3_ATAC )
+
+for i in ${!associative[@]}; do \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 38 && $9<=100) || ($9<=-38 && $9>=-100)' | samtools view -b > split_bam/NFR_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 180 && $9<=247) || ($9<=-180 && $9>=-247)' | samtools view -b > split_bam/mononucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 315 && $9<=473) || ($9<=-315 && $9>=-473)' | samtools view -b > split_bam/dinucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 558 && $9<=615) || ($9<=-558 && $9>=-615)' | samtools view -b > split_bam/trinucleosomal_${associative[$i]}.bam \
+; done
+
+#in R
+
+library(GenomicFeatures)
+library(Rsamtools)
+library(ATACseqQC)
+library(BSgenome.Smediterranea.MPINAT.S3h1)
+library(ChIPpeakAnno)
+
+
+
+#possible Bam tags
+possibleTag <- list("integer"=c("AM", "AS", "CM", "CP", "FI", "H0", "H1", "H2", 
+                                "HI", "IH", "MQ", "NH", "NM", "OP", "PQ", "SM",
+                                "TC", "UQ"), 
+                    "character"=c("BC", "BQ", "BZ", "CB", "CC", "CO", "CQ", "CR",
+                                  "CS", "CT", "CY", "E2", "FS", "LB", "MC", "MD",
+                                  "MI", "OA", "OC", "OQ", "OX", "PG", "PT", "PU",
+                                  "Q2", "QT", "QX", "R2", "RG", "RX", "SA", "TS",
+                                  "U2"))
+
+#custom txdbs for:
+#- the standard annotation file 
+#- Transcription initiation sites
+#- gmapped smest transcripts (augustus predictions)
+chrominfo <- read.delim(file = "schMedS3_h1_chrominfo.tsv",header = FALSE,sep = "\t",quote = "",col.names = c("chrom","length"))
+
+smed_seqinfo <- Seqinfo(chrominfo$chrom, seqlengths=chrominfo$length, isCircular=NA, genome='schMedS3_h1')
+
+
+meta_txdb <- data.frame(name = c('organism','genome'),
+                        value = c('Schmidtea mediterranea','schMedS3_h1'))
+
+smed_TxdB <- makeTxDbFromGFF(file = "schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3",
+                             format = "gff3",
+                             dataSource = "annotation file made through collaboration between L. Pandolfini and J. Rink laboratories",
+                             organism = "Schmidtea mediterranea sexual",
+                             taxonomyId = 79327,
+                             circ_seqs = character(0),
+                             chrominfo = smed_seqinfo,
+                             metadata = meta_txdb
+)
+
+start_txdb <- makeTxDbFromGFF(file = "focused_alltss.gtf",
+                              format = "gtf",
+                              dataSource = "Modified bedfile containing all the identified Transcription initiation sites using Start-seq data",
+                              organism = "Schmidtea mediterranea sexual",
+                              taxonomyId = 79327,
+                              circ_seqs = character(0),
+                              chrominfo = smed_seqinfo,
+                              metadata = meta_txdb
+)
+
+seqinformation_txdb <- seqinfo(smed_TxdB)
+seqinformation_start <- seqinfo(start_txdb)
+
+start <- transcripts(start_txdb)
+txs <- transcripts(smed_TxdB)
+
+genome <- Smediterranea
+
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+
+TSS_start <- promoters(start, upstream=0, downstream=1)
+TSS_smed <- promoters(txs, upstream=0, downstream=1)
+TSS_start <- unique(TSS_start)
+TSS_smed <- unique(TSS_smed)
+
+save.image(file = "ATACseqQC.RData")
+
+###
+library(GenomicFeatures)
+library(GenomicAlignments)
+library(Rsamtools)
+library(ATACseqQC)
+library(ChIPpeakAnno)
+library(VplotR)
+library(BiocManager)
+library(BSgenome.Smediterranea.MPINAT.S3h1)
+
+load(file = "ATACseqQC.RData")
+path_to_split <- "split_bam"
+
+##read in bam-files
+split_bamfiles <- file.path(path_to_split,
+                            c("NFR_ATAC_X1_1_sorted.bam",
+                              "mononucleosomal_ATAC_X1_1_sorted.bam",
+                              "dinucleosomal_ATAC_X1_1_sorted.bam",
+                              "trinucleosomal_ATAC_X1_1_sorted.bam"
+				))
+split_bamfiles.labels <- gsub(".bam", "", basename(split_bamfiles))
+
+## estimate the library size for normalization
+librarySize <- estLibSize(split_bamfiles)
+
+NTILE <- 101
+dws <- ups <- 1010
+sigs <- enrichedFragments(split_bamfiles,
+                          TSS=TSS_smed,
+                          librarySize=librarySize,
+                          seqlev=seqinformation_txdb@seqnames,
+                          TSS.filter=0.5,
+                          n.tile = NTILE,
+                          upstream = ups,
+                          downstream = dws)
+
+out_Nucl <- featureAlignedDistribution(sigs, reCenterPeaks(TSS_smed, width=ups+dws),
+                                  zeroAt=.5, n.tile=NTILE, type="l", 
+                                  ylab="Averaged coverage")
+
+out_Nucl <- apply(out_Nucl, 2, range01)
+
+pdf(file = "nucleosome_signal_smed_2.pdf", width = 12,height = 9.5)
+
+matplot(out_Nucl, type="l", xaxt="n", 
+        main = paste0("Nucleosomal-free and mononucleosomal signal at TSS for sample ", split_bamfiles.labels),
+        xlab="Position (bp)", 
+        ylab="Fraction of signal")
+axis(1, at=seq(0, 100, by=10)+1, 
+     labels=c("-1K", seq(-800, 800, by=200), "1K"), las=2)
+
+abline(v=seq(0, 100, by=10)+1, lty=2, col="gray")
+legend("topright", colnames(out_Nucl),col=seq_len(ncol(out_Nucl)),cex=.8,fill=seq_len(ncol(out_Nucl)))
+dev.off()
+
+#

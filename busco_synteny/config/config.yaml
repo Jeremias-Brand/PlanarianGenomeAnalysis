@@ -1,0 +1,21 @@
+####################################################################
+
+# ASSEMBLIES
+
+genomeDIR: "lib/"
+genomeEXT: ".fa"
+genomes:
+  - "schLug1"
+  - "schNov1"
+  - "schMedS3_h1"
+  - "schMedS3_h2"
+  - "schPol2"
+  - "clonorchis_sinensis.PRJNA386618"
+  - "hymenolepis_microstoma.PRJEB124"
+  - "schistosoma_mansoni.PRJEA36577"
+  - "taenia_multiceps.PRJNA307624"
+
+##################################################################t#
+
+#threads
+threads_busco: 30

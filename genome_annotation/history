@@ -1,0 +1,1 @@
+cat workflow/resources/RM_merge_rm-reduced_rm-library-2018-03-28_noRedundantLTR.fa workflow/resources/telomere_db.fa  workflow/resources/TAREAN_satDNA_smed.fasta > workflow/resources/schMed_curated_repeat_library.fa

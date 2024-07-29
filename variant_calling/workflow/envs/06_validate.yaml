@@ -1,0 +1,4 @@
+channels:
+  - bioconda
+dependencies:
+  - biopet-validatefastq=0.1.1

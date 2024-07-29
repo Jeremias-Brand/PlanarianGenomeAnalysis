@@ -1,0 +1,4 @@
+Building DAG of jobs...
+WildcardError in line 1 of /projects/mivanko/Bioinfo/chip_testing_ab_wt_vsv_xray_4dpi_08_2020_schMea97/envs/snakefile:
+Wildcards in input files cannot be determined from output files:
+'sample'

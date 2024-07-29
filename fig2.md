@@ -1,0 +1,1 @@
+Run `scripts/fig2.sh` and then `scripts/fig2.R`

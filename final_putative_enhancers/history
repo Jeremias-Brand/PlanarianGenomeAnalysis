@@ -1,0 +1,118 @@
+cp ../Comprehensive_analysis_wt_vs_4dpi_schMedS3h1/swap/005_MACS2/chr_wt_H3K27ac_peaks.narrowPeak .
+cp ../Comprehensive_analysis_wt_vs_4dpi_schMedS3h1/swap/005_MACS2/chr_wt_H3K4me3_peaks.narrowPeak .
+cp ../2022_11_03_ATAC_Schmidtea_mediterranea_S3_h1/swap/005_MACS2/combined_peaksets/chr_Smed_combined_peaks.narrowPeak .
+cp ../2022_11_03_ATAC_Schmidtea_mediterranea_S3_h1/swap/005_MACS2/combined_peaksets/chr_Smed_combined_summits.bed .
+cp ../2022_07_06_ATAC_Schmidtea_Polychroa/swap/005_MACS2/combined_peaksets/chr_Spol_combined_peaks.narrowPeak .
+cp ../2022_07_06_ATAC_Schmidtea_Lugubris/swap/005_MACS2/combined_peaksets/chr_Slug_combined_peaks.narrowPeak .
+cp ../2022_07_06_ATAC_Schmidtea_Nova/swap/005_MACS2/combined_peaksets/chr_Snov_combined_peaks.narrowPeak .
+
+
+#create peaksets
+bedtools intersect -v -a chr_wt_H3K27ac_peaks.narrowPeak -b chr_wt_H3K4me3_peaks.narrowPeak > chr_wt_H3K27ac_noH3K4me3_peaks.narrowPeak
+bedtools intersect -v -b chr_wt_H3K27ac_peaks.narrowPeak -a chr_wt_H3K4me3_peaks.narrowPeak > chr_wt_H3K4me3_noH3K27ac_peaks.narrowPeak
+bedtools intersect -wa -a chr_wt_H3K27ac_peaks.narrowPeak -b chr_wt_H3K4me3_peaks.narrowPeak > chr_wt_H3K27ac_withH3K4me3_peaks.narrowPeak
+bedtools intersect -wa -b chr_wt_H3K27ac_peaks.narrowPeak -a chr_wt_H3K4me3_peaks.narrowPeak > chr_wt_H3K4me3_withH3K27ac_peaks.narrowPeak
+
+bedtools intersect -a chr_wt_H3K4me3_noH3K27ac_peaks.narrowPeak -b chr_Smed_combined_peaks.narrowPeak -v > chr_wt_H3K4me3_noH3K27ac_peaks_no_chr_Smed_combined_peaks.narrowPeak
+bedtools intersect -a chr_wt_H3K27ac_noH3K4me3_peaks.narrowPeak -b chr_Smed_combined_peaks.narrowPeak -v > chr_wt_H3K27ac_noH3K4me3_peaks_no_chr_Smed_combined_peaks.narrowPeak
+bedtools intersect -a chr_wt_H3K27ac_withH3K4me3_peaks.narrowPeak -b chr_Smed_combined_peaks.narrowPeak -v > chr_wt_H3K27ac_withH3K4me3_peaks_no_chr_Smed_combined_peaks.narrowPeak
+
+bedtools intersect -wa -a chr_Smed_combined_peaks.narrowPeak -b chr_wt_H3K27ac_noH3K4me3_peaks.narrowPeak > chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_peaks.narrowPeak
+bedtools intersect -wa -a chr_Smed_combined_peaks.narrowPeak -b chr_wt_H3K27ac_withH3K4me3_peaks.narrowPeak > chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_peaks.narrowPeak
+bedtools intersect -wa -a chr_Smed_combined_peaks.narrowPeak -b chr_wt_H3K4me3_noH3K27ac_peaks.narrowPeak > chr_Smed_combined_peaks_wt_H3K4me3_noH3K27ac_peaks.narrowPeak
+
+uniq chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_peaks.narrowPeak > uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_peaks.narrowPeak
+uniq chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_peaks.narrowPeak > uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_peaks.narrowPeak
+uniq chr_Smed_combined_peaks_wt_H3K4me3_noH3K27ac_peaks.narrowPeak > uniq_chr_Smed_combined_peaks_wt_H3K4me3_noH3K27ac_peaks.narrowPeak
+
+#generate summit data
+awk -F '\t' '{OFS="\t"} {print $1,$2+$10,$2+1+$10,$4,$5,$6}' chr_wt_H3K4me3_noH3K27ac_peaks_no_chr_Smed_combined_peaks.narrowPeak > chr_wt_H3K4me3_noH3K27ac_peaks_no_chr_Smed_combined_peaks_summits.bed
+
+#check distance to TSS
+grep 'CDS' schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3 | awk -F "\t" 'BEGIN {OFS="\t"} {if($7 == "+") print $1,$4,$4+1,$9,$6,$7; else print $1,$5-1,$5,$6,$5,$7}' | sort -k1,1 -k2,2n > TSS_CDS_schMedS3_h1_ENCODE_hybrid_agat_only_hconf.bed
+bedtools closest -a chr_wt_H3K27ac_noH3K4me3_peaks.narrowPeak -b TSS_CDS_schMedS3_h1_ENCODE_hybrid_agat_only_hconf.bed -d -t first > closest_TSS_to_chr_wt_H3K27ac_noH3K4me3_peaks
+bedtools closest -a chr_wt_H3K27ac_withH3K4me3_peaks.narrowPeak -b TSS_CDS_schMedS3_h1_ENCODE_hybrid_agat_only_hconf.bed -d -t first > closest_TSS_to_chr_wt_H3K27ac_withH3K4me3_peaks
+bedtools closest -a chr_wt_H3K4me3_noH3K27ac_peaks.narrowPeak -b TSS_CDS_schMedS3_h1_ENCODE_hybrid_agat_only_hconf.bed -d -t first > closest_TSS_to_chr_wt_H3K4me3_noH3K27ac_peaks
+
+# in R
+library(GenomicFeatures)
+library(ChIPseeker)
+txdb <- makeTxDbFromGFF("schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3", format="gff3", dataSource=NA, organism=NA, taxonomyId=NA, chrominfo=NULL, miRBaseBuild=NA)
+peakAnno_onlyH3K4me3 <- annotatePeak("chr_wt_H3K4me3_noH3K27ac_peaks_no_chr_Smed_combined_peaks_summits.bed", TxDb = txdb, level = "transcript", assignGenomicAnnotation = TRUE, genomicAnnotationPriority = c("Promoter", "Exon", "Intron", "Intergenic"), annoDb = NULL, addFlankGeneInfo = FALSE, flankDistance = 5000, sameStrand = FALSE, ignoreOverlap = FALSE, ignoreUpstream = FALSE, ignoreDownstream = FALSE, overlap = "TSS", verbose = TRUE)
+svg("chr_wt_H3K4me3_noH3K27ac_peaks_no_chr_Smed_combined_peaks_summits_anno_peak_upset.svg", width=20, height=10)
+upsetplot(peakAnno_onlyH3K4me3, vennpie=TRUE)
+dev.off()
+write.table(as.data.frame(peakAnno_onlyH3K4me3@anno), file="peakAnno_onlyH3K4me3.txt", quote = F, row.names = F, sep = "\t")
+
+#create summit file
+for i in uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_peaks.narrowPeak uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_peaks.narrowPeak uniq_chr_Smed_combined_peaks_wt_H3K4me3_noH3K27ac_peaks.narrowPeak; do \
+awk -F "\t" 'BEGIN {OFS="\t"} {print $1,$2+$10,$2+$10+1,$1"_"$2"_"$3,$5,$6}' $i | sort -k1,1 -k2,2n > ${i%_peaks.narrowPeak}_summits.bed; done
+
+#visulaize findings
+declare -A associative
+associative=([uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_summits.bed]=ATAC_H3K27ac_noH3K4me3 \
+[uniq_chr_Smed_combined_peaks_wt_H3K4me3_noH3K27ac_summits.bed]=ATAC_H3K4me3_noH3K27ac \
+[uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_summits.bed]=ATAC_H3K27ac_withH3K4me3 )
+
+for i in ${!associative[@]}; do \
+computeMatrix reference-point \
+--referencePoint TSS \
+-b 1000 -a 1000 \
+--scoreFileName ../../Comparative_Genomics_Schmidtea/Comprehensive_analysis_wt_vs_4dpi_schMedS3h1/swap/005_MACS2/wt_H3K4me3_SPMR/wt_H3K4me3_SPMR_treat_pileup.bw ../../Comparative_Genomics_Schmidtea/Comprehensive_analysis_wt_vs_4dpi_schMedS3h1/swap/005_MACS2/wt_H3K27ac_SPMR/wt_H3K27ac_SPMR_treat_pileup.bw ../../Comparative_Genomics_Schmidtea/Comprehensive_analysis_wt_vs_4dpi_schMedS3h1/swap/002_merged_bam/merged_SM/SM_SPMR/SM_SPMR_treat_pileup.bw \
+--regionsFileName $i \
+--outFileName ${associative[$i]}_summit_wt_SPMR_computeMatrix.mat.gz \
+--outFileNameMatrix ${associative[$i]}_summit_wt_SPMR_computeMatrix_Matrix \
+--outFileSortedRegions ${associative[$i]}_summit_wt_SPMR_computeMatrix_SortedRegions \
+--samplesLabel wt_H3K4me3 wt_H3K27ac wt_ATACseq \
+--numberOfProcessors max \
+&& \
+plotHeatmap \
+--matrixFile ${associative[$i]}_summit_wt_SPMR_computeMatrix.mat.gz \
+--outFileName ${associative[$i]}_summit_wt_SPMR_plotHeatmap.svg \
+--averageType mean \
+--plotType lines \
+--legendLocation upper-right \
+--whatToShow 'plot, heatmap and colorbar' \
+--zMin 0 0 \
+--zMax 5 5 \
+--yMin 0 0 \
+--yMax 5 5 \
+--legendLocation upper-right \
+--colorList '#ffffff,#cc79a7' '#ffffff,#0072b2' '#ffffff,#e69f00' \
+;done
+
+#normalized peak sizes
+bedtools slop -i uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_summits.bed -g ../../Comparative_Genomics_Schmidtea/2022_11_03_ATAC_Schmidtea_mediterranea_S3_h1/bwa_index_schMedS3_h1/chrom.sizes -b 200 > uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_summits_400bp.tab
+bedtools slop -i uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_summits.bed -g ../../Comparative_Genomics_Schmidtea/2022_11_03_ATAC_Schmidtea_mediterranea_S3_h1/bwa_index_schMedS3_h1/chrom.sizes -b 200 > uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_summits_400bp.tab
+bedtools slop -i chr_Smed_combined_summits.bed -g ../../Comparative_Genomics_Schmidtea/2022_11_03_ATAC_Schmidtea_mediterranea_S3_h1/bwa_index_schMedS3_h1/chrom.sizes -b 200 | sort -k1,2 -k2,2n > chr_Smed_combined_summits_400bp.tab
+
+# run R
+library(GenomicFeatures)
+library(ChIPseeker)
+txdb <- makeTxDbFromGFF("schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3", format="gff3", dataSource=NA, organism=NA, taxonomyId=NA, chrominfo=NULL, miRBaseBuild=NA)
+options(ChIPseeker.downstreamDistance = 3000)
+peakAnno_ATAC <- annotatePeak("uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_summits.bed", TxDb = txdb, genomicAnnotationPriority = c("Promoter", "Exon", "Intron", "Intergenic","Downstream"))
+svg("uniq_chr_Smed_combined_peaks_wt_H3K27ac_withH3K4me3_summits_anno_peak_plotAnnoPie.svg", width=20, height=10)
+plotAnnoPie(peakAnno_ATAC)
+dev.off()
+
+# run R
+library(GenomicFeatures)
+library(ChIPseeker)
+txdb <- makeTxDbFromGFF("schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3", format="gff3", dataSource=NA, organism=NA, taxonomyId=NA, chrominfo=NULL, miRBaseBuild=NA)
+options(ChIPseeker.downstreamDistance = 3000)
+peakAnno_ATAC <- annotatePeak("uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_summits.bed", TxDb = txdb, genomicAnnotationPriority = c("Promoter", "Exon", "Intron", "Intergenic","Downstream"))
+svg("uniq_chr_Smed_combined_peaks_wt_H3K27ac_noH3K4me3_summits_anno_peak_plotAnnoPie.svg", width=20, height=10)
+plotAnnoPie(peakAnno_ATAC)
+dev.off()
+
+
+# run R
+library(GenomicFeatures)
+library(ChIPseeker)
+txdb <- makeTxDbFromGFF("schMedS3_h1_ENCODE_hybrid_agat_only_hconf.gff3", format="gff3", dataSource=NA, organism=NA, taxonomyId=NA, chrominfo=NULL, miRBaseBuild=NA)
+options(ChIPseeker.downstreamDistance = 3000)
+peakAnno_ATAC <- annotatePeak("unchar_chr_Smed_combined_peaks.narrowPeak", TxDb = txdb, genomicAnnotationPriority = c("Promoter", "Exon", "Intron", "Intergenic","Downstream"))
+svg("unchar_chr_Smed_combined_peaks.narrowPeak_anno_peak_plotAnnoPie.svg", width=20, height=10)
+plotAnnoPie(peakAnno_ATAC)
+dev.off()

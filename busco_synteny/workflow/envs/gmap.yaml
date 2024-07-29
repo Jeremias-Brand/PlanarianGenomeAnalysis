@@ -1,0 +1,4 @@
+channels:
+ - bioconda
+dependencies:
+ - gmap=2020.10.14

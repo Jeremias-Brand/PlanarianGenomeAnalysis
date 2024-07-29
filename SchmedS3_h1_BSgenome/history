@@ -1,0 +1,8 @@
+gunzip schMedS3_h1.fa.gz 
+./bin/faToTwoBit schMedS3_h1.fa schMedS3_h1.2bit
+./bin/twoBitInfo schMedS3_h1.2bit stdout | sort -k2rn > schMedS3_h1.chrom.sizes
+
+
+#R CMD BUILD path/to/package/directory
+#R CMD CHECK path/to/tarball
+#R CMD INSTALL path/to/tarball

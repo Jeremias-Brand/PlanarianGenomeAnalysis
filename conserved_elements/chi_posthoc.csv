@@ -1,0 +1,7 @@
+"","Dimension","Value","putative_enhancer","putative_promoter","uncharacterized"
+"1","highly_conserved","Residuals","28.0963760602232","68.4350043343814","-81.7914135775775"
+"2","highly_conserved","p values","0*","0*","0*"
+"3","not_conserved","Residuals","-56.7369903475861","-69.3981742732019","105.337931355112"
+"4","not_conserved","p values","0*","0*","0*"
+"5","partially_conserved","Residuals","38.0477331327805","22.7063189054429","-49.9141239536085"
+"6","partially_conserved","p values","0*","0*","0*"

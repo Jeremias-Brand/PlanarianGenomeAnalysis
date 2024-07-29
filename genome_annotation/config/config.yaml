@@ -1,0 +1,21 @@
+# list of genomes to run the checks on
+genomeDIR: "latest/"
+genomeEXT: ".fa"
+
+# EDTA only allows seqnames of 13 characters
+# add modified sequences here
+EDTADIR: "EDTA_input/"
+genomes:
+
+genomes_size_names:
+
+
+# repeatmasker library of repeats from Grohme et al. 2018
+repeatmasker_lib: "workflow/resources/RM_merge_rm-reduced_rm-library-2018-03-28_noRedundantLTR.fa"
+satDNA_lib: "workflow/resources/sch_shared-sats.fasta"
+
+# barrnap
+barrnap_kingdom: 'euk'
+
+# EDTA
+curatedlib: 'workflow/resources/schMed_curated_repeat_library_v2.fa'

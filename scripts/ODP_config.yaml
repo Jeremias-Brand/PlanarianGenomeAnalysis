@@ -1,0 +1,67 @@
+# 
+# This is an example config file for odp/scripts/odp
+#
+# # To use this software first copy this config file to your analysis directory
+# cp odp/example_configs/CONFIG_odp.yaml ./config.yaml
+# # Then modify the config file to include your own data
+# vim config.yaml
+# # Then run the pipeline
+# snakemake -r -p --snakefile odp/scripts/odp
+
+ignore_autobreaks: True       # Skip steps to find breaks in synteny blocks
+diamond_or_blastp: "diamond"  # "diamond" or "blastp"
+duplicate_proteins: "pass"    # currently only "fail" or "best". Fail doesn't allow duplicate names or seqs
+plot_LGs: True                # Plot the ALGs based on the installed databases
+plot_sp_sp: True              # Plot the synteny between two species, if False just generates .rbh files
+
+species:
+  schMedS3h1:
+    proteins: odp_pep/schMedS3h1.fa
+    chrom: odp_chrom/schMedS3h1.chrom
+    genome: odp_genomes/schMedS3_h1.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  schMedS3h2:
+    proteins: odp_pep/schMedS3h2.fa
+    chrom: odp_chrom/schMedS3h2.chrom
+    genome: odp_genomes/schMedS3_h2.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  schPol2:
+    proteins: odp_pep/schPol2.fa
+    chrom:  odp_chrom/schPol2.chrom
+    genome: odp_genomes/schPol2.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or larger
+  schNov1:
+    proteins: odp_pep/schNov1.fa
+    chrom: odp_chrom/schNov1.chrom
+    genome: odp_genomes/schNov1.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  schLug1:
+    proteins: odp_pep/schLug1.fa
+    chrom: odp_chrom/schLug1.chrom
+    genome: odp_genomes/schLug1.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  cloSin:
+    proteins: odp_pep/cloSin.fa
+    chrom: odp_chrom/cloSin.chrom
+    genome: odp_genomes/clonorchis_sinensis.PRJNA386618.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  schMan:
+    proteins: odp_pep/schMan.fa
+    chrom: odp_chrom/schMan.chrom
+    genome: odp_genomes/schistosoma_mansoni.PRJEA36577.WBPS17.genomic.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  taeMul:
+    proteins: odp_pep/taeMul.fa
+    chrom: odp_chrom/taeMul.chrom
+    genome: odp_genomes/taenia_multiceps.PRJNA307624.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  hymMic:
+    proteins: odp_pep/hymMic.fa
+    chrom: odp_chrom/hymMic.chrom
+    genome: odp_genomes/hymenolepis_microstoma.PRJEB124.fa
+    minscafsize: 10000000  # Only plots scaffolds that are 1 Mbp or longer
+  Machtxv2:
+    proteins: odp_pep/Machtx_SR1_v2.fa
+    chrom: odp_chrom/Machtx_SR1_v2.chrom
+    genome: odp_genomes/Machtx_SR1_v2.fasta
+    minscafsize: 1000000  # Only plots scaffolds that are 1 Mbp or longer

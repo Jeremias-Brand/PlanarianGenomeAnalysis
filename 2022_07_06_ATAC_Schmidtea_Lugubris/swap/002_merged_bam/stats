@@ -1,0 +1,189 @@
+#placeholder1
+#placeholder2
+#placeholder3
+#placeholder4
+#placeholder5
+#placeholder6
+#placeholder7
+#placeholder8
+#placeholder9
+
+ SL_1_sorted.bam 
+185458500 + 0 in total (QC-passed reads + QC-failed reads)
+18221 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+185458500 + 0 mapped (100.00% : N/A)
+185440279 + 0 paired in sequencing
+92732281 + 0 read1
+92707998 + 0 read2
+185440279 + 0 properly paired (100.00% : N/A)
+185440279 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SL_2_sorted.bam 
+198154750 + 0 in total (QC-passed reads + QC-failed reads)
+35146 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+198154750 + 0 mapped (100.00% : N/A)
+198119604 + 0 paired in sequencing
+99072720 + 0 read1
+99046884 + 0 read2
+198119604 + 0 properly paired (100.00% : N/A)
+198119604 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SL_3_sorted.bam 
+186779559 + 0 in total (QC-passed reads + QC-failed reads)
+26527 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+186779559 + 0 mapped (100.00% : N/A)
+186753032 + 0 paired in sequencing
+93387624 + 0 read1
+93365408 + 0 read2
+186753032 + 0 properly paired (100.00% : N/A)
+186753032 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLH_1_sorted.bam 
+182586391 + 0 in total (QC-passed reads + QC-failed reads)
+39868 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+182586391 + 0 mapped (100.00% : N/A)
+182546523 + 0 paired in sequencing
+91285082 + 0 read1
+91261441 + 0 read2
+182546523 + 0 properly paired (100.00% : N/A)
+182546523 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLH_2_sorted.bam 
+194485969 + 0 in total (QC-passed reads + QC-failed reads)
+31392 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+194485969 + 0 mapped (100.00% : N/A)
+194454577 + 0 paired in sequencing
+97240142 + 0 read1
+97214435 + 0 read2
+194454577 + 0 properly paired (100.00% : N/A)
+194454577 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLH_3_sorted.bam 
+204092535 + 0 in total (QC-passed reads + QC-failed reads)
+41136 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+204092535 + 0 mapped (100.00% : N/A)
+204051399 + 0 paired in sequencing
+102039836 + 0 read1
+102011563 + 0 read2
+204051399 + 0 properly paired (100.00% : N/A)
+204051399 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLT_1_sorted.bam 
+185791538 + 0 in total (QC-passed reads + QC-failed reads)
+35735 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+185791538 + 0 mapped (100.00% : N/A)
+185755803 + 0 paired in sequencing
+92891244 + 0 read1
+92864559 + 0 read2
+185755803 + 0 properly paired (100.00% : N/A)
+185755803 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLT_2_sorted.bam 
+201125647 + 0 in total (QC-passed reads + QC-failed reads)
+29441 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+201125647 + 0 mapped (100.00% : N/A)
+201096206 + 0 paired in sequencing
+100564273 + 0 read1
+100531933 + 0 read2
+201096206 + 0 properly paired (100.00% : N/A)
+201096206 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLT_3_sorted.bam 
+157139411 + 0 in total (QC-passed reads + QC-failed reads)
+34477 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+157139411 + 0 mapped (100.00% : N/A)
+157104934 + 0 paired in sequencing
+78567909 + 0 read1
+78537025 + 0 read2
+157104934 + 0 properly paired (100.00% : N/A)
+157104934 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLX_1_sorted.bam 
+167389611 + 0 in total (QC-passed reads + QC-failed reads)
+16673 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+167389611 + 0 mapped (100.00% : N/A)
+167372938 + 0 paired in sequencing
+83695768 + 0 read1
+83677170 + 0 read2
+167372938 + 0 properly paired (100.00% : N/A)
+167372938 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLX_2_sorted.bam 
+174986502 + 0 in total (QC-passed reads + QC-failed reads)
+34000 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+174986502 + 0 mapped (100.00% : N/A)
+174952502 + 0 paired in sequencing
+87485927 + 0 read1
+87466575 + 0 read2
+174952502 + 0 properly paired (100.00% : N/A)
+174952502 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+ SLX_3_sorted.bam 
+171417054 + 0 in total (QC-passed reads + QC-failed reads)
+31104 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+171417054 + 0 mapped (100.00% : N/A)
+171385950 + 0 paired in sequencing
+85701856 + 0 read1
+85684094 + 0 read2
+171385950 + 0 properly paired (100.00% : N/A)
+171385950 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)

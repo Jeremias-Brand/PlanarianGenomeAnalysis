@@ -1,0 +1,91 @@
+##for splitting reads manually
+#nucleosome-free bin (38–100 bp)
+#intermediate bin 1 (100–180 bp)
+#mono-nucleosome bin (180–247 bp)
+#intermediate bin 2 (247–315 bp)
+#di-nucleosome bin (315–473 bp)
+#intermediate bin 3 (473–558 bp)
+#tri-nucleosome bin (558–615 bp)
+#others (615–2000 bp)
+
+declare -A associative
+associative=([../002_merged_bam/SP_1_sorted.bam]=wt1_ATAC \
+[../002_merged_bam/SP_2_sorted.bam]=wt2_ATAC \
+[../002_merged_bam/SP_3_sorted.bam]=wt3_ATAC \
+[../002_merged_bam/SPX_1_sorted.bam]=xray1_ATAC \
+[../002_merged_bam/SPX_2_sorted.bam]=xray2_ATAC \
+[../002_merged_bam/SPX_3_sorted.bam]=xray3_ATAC \
+[../../lib/L104869_Track-147003_csm_no_dup_mapped_q20.bam]=wt_1_1_ATAC \
+[../../lib/L104870_Track-147004_csm_no_dup_mapped_q20.bam]=wt_1_2_ATAC \
+[../../lib/L104871_Track-147005_csm_no_dup_mapped_q20.bam]=wt_1_3_ATAC \
+[../../lib/L109256_merged_csm_no_dup_mapped_q20.bam]=xray_1_1_ATAC \
+[../../lib/L109257_merged_csm_no_dup_mapped_q20.bam]=xray_1_2_ATAC \
+[../../lib/L109258_merged_csm_no_dup_mapped_q20.bam]=xray_1_3_ATAC )
+
+for i in ${!associative[@]}; do \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 38 && $9<=100) || ($9<=-38 && $9>=-100)' | samtools view -b > split_bam/NFR_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 180 && $9<=247) || ($9<=-180 && $9>=-247)' | samtools view -b > split_bam/mononucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 315 && $9<=473) || ($9<=-315 && $9>=-473)' | samtools view -b > split_bam/dinucleosomal_${associative[$i]}.bam && \
+samtools view -h $i | awk 'substr($0,1,1)=="@" || ($9>= 558 && $9<=615) || ($9<=-558 && $9>=-615)' | samtools view -b > split_bam/trinucleosomal_${associative[$i]}.bam \
+; done
+
+#prepare folder
+create Rscript
+cp ../../bwa_index_Spol/schPol2_BSgenome/schPol2.chrom.sizes schPol2_chrominfo.tsv
+
+#run R 
+library(GenomicFeatures)
+	library(Rsamtools)
+	library(ATACseqQC)
+	library(BSgenome.Spolychroa.MPINAT.2)
+	library(ChIPpeakAnno)
+
+
+
+	#possible Bam tags
+	possibleTag <- list("integer"=c("AM", "AS", "CM", "CP", "FI", "H0", "H1", "H2", 
+		                        "HI", "IH", "MQ", "NH", "NM", "OP", "PQ", "SM",
+		                        "TC", "UQ"), 
+		            "character"=c("BC", "BQ", "BZ", "CB", "CC", "CO", "CQ", "CR",
+		                          "CS", "CT", "CY", "E2", "FS", "LB", "MC", "MD",
+		                          "MI", "OA", "OC", "OQ", "OX", "PG", "PT", "PU",
+		                          "Q2", "QT", "QX", "R2", "RG", "RX", "SA", "TS",
+		                          "U2"))
+
+	#custom txdbs for:
+	chrominfo <- read.delim(file = "schPol2_chrominfo.tsv",header = FALSE,sep = "\t",quote = "",col.names = c("chrom","length"))
+
+	spol_seqinfo <- Seqinfo(chrominfo$chrom, seqlengths=chrominfo$length, isCircular=NA, genome='schPol2')
+
+
+	meta_txdb <- data.frame(name = c('organism','genome'),
+		                value = c('Schmidtea polychroa','schPol2'))
+
+	spol_TxdB <- makeTxDbFromGFF(file = "schPol2_ENCODE_hybrid_all.gff3",
+		                     format = "gff3",
+		                     dataSource = "annotation file made through collaboration between L. Pandolfini and J. Rink laboratories",
+		                     organism = "Schmidtea polychroa",
+		                     taxonomyId = 50054,
+		                     circ_seqs = character(0),
+		                     chrominfo = spol_seqinfo,
+		                     metadata = meta_txdb
+	)
+
+
+	seqinformation_txdb <- seqinfo(spol_TxdB)
+
+	txs <- transcripts(spol_TxdB)
+#mistake in the DESCRIPTION file Slugubris instead of Spol
+	genome <- Slugubris
+
+	range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+
+	TSS_spol <- promoters(txs, upstream=0, downstream=1)
+	TSS_spol <- unique(TSS_spol)
+
+	save.image(file = "ATACseqQC.RData")
+	
+#
+
+#running
+for i in wt1_ATAC wt2_ATAC wt3_ATAC xray1_ATAC xray2_ATAC xray3_ATAC wt_1_1_ATAC wt_1_2_ATAC wt_1_3_ATAC xray_1_1_ATAC xray_1_2_ATAC xray_1_3_ATAC; do Rscript nucleosomal_positioning.R $i ${i}_Spol ; done

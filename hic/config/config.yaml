@@ -1,0 +1,29 @@
+fetch_srr:
+
+# define target to produce
+# for pacbio read mapping
+sv_pairs: "config/sv_pairs.tsv"
+# for HiC mapping
+combinations: "config/combinations.tsv"
+# dirs
+omnic_dir: "lib/hic/"
+genome_dir: "lib/"
+pb_dir: "lib/pb_reads/"
+# opts
+opt_bwa: "-5SP -T0"
+opt_pairtools_parse: "--min-mapq 40 --walks-policy 5unique --max-inter-align-gap 30"
+opt_cooltools_exp: ""
+# threads
+threads_bwa: 48
+threads_bgzip: 20
+threads_cool: 32
+
+genomes:
+  - "schMedS3_h1"
+  - "schMedS3_h2"
+
+maxres_cool: "1000"
+exres_cool: "100000"
+zoomify_opt: "-r 1000N --balance"
+
+

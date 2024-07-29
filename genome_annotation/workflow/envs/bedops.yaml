@@ -1,0 +1,4 @@
+channels:
+  - "bioconda"
+dependencies:
+ - "bedops=2.4.40"

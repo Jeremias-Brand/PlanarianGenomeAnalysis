@@ -1,0 +1,44 @@
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam} \
+--bdg \
+--keep-dup all \
+-g 4.81e8 \
+; done
+
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/*ds_sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam}_SPMR \
+--outdir ${i%_sorted.bam}_SPMR \
+--SPMR \
+--bdg \
+--keep-dup all \
+-g 4.81e8 \
+; done
+
+##NOTE
+#MACS2 Segmentation fault
+#	#move files here
+#	#create folder
+#	mkdir SPMR_bw
+#	#create bw files from SPMR folders and move
+#	for i in *_SPMR; do ( cd "$i" && for j in *SPMR_treat_pileup.bdg; do bedGraphToBigWig $j ../../bwa_index_Spol/chrom.sizes ${j%.bdg}.bw && mv ${j%.bdg}.bw ../SPMR_bw/.; done ); done
+
+#MACS2- variation if most of the reads are aligned in proper pairs - macs2 2.2.7.1
+for i in ../003_subsampled_bam/merged/*sorted.bam; do \
+macs2 callpeak -f BAMPE \
+-t $i \
+-n ${i%_sorted.bam} \
+--bdg \
+--keep-dup all \
+-g 4.81e8 \
+; done
+
+#remove non chr peaks
+for i in *_peaks.xls ; do cat $i | grep "chr" > chr_${i}; done
+for i in *.narrowPeak ; do cat $i | grep "chr" > chr_${i}; done
+for i in *_summits.bed ; do cat $i | grep "chr" > chr_${i}; done

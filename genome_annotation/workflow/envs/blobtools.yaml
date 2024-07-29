@@ -1,0 +1,11 @@
+channels:
+  - bioconda
+dependencies:
+  - matplotlib
+  - docopt
+  - tqdm
+  - wget
+  - pyyaml
+  - git
+  - pysam
+  - samtools

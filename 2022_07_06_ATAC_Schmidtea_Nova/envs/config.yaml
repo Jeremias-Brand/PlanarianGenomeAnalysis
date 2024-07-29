@@ -1,0 +1,19 @@
+#create dictionary for sequencing files
+        L109283_merged: SNX_1_1
+        L109284_merged: SNX_1_2
+        L109285_merged: SNX_1_3
+        L109286_merged: SNX_2_1
+        L109287_merged: SNX_2_2
+        L109288_merged: SNX_2_3
+        L109289_merged: SNX_3_1
+        L109290_merged: SNX_3_2
+        L109291_merged: SNX_3_3
+        L104886_Track-147020: SN_3_3
+        L104885_Track-147019: SN_3_2
+        L104884_Track-147018: SN_3_1
+        L104883_Track-147017: SN_2_3
+        L104882_Track-147016: SN_2_2
+        L104881_Track-147015: SN_2_1
+        L104880_Track-147014: SN_1_3
+        L104879_Track-147013: SN_1_2
+        L104878_merged: SN_1_1

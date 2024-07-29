@@ -1,0 +1,2 @@
+snakemake --cores 100 --use-conda
+Rscript --vanilla ./busco_syn.R

@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.0
+  - r-essentials
+  - bioconductor-karyoploter=1.18.0

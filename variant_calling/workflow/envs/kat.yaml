@@ -1,0 +1,4 @@
+channels:
+  - bioconda
+dependencies:
+  - kat=2.4.1

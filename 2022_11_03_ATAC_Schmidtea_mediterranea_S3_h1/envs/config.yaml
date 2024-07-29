@@ -1,0 +1,26 @@
+#create dictionary for sequencing files
+samples:
+        L79857_Track-124338: X_1_1
+        L79858_Track-124336: X_1_2
+        L79859_Track-124331: X_1_3
+        L79860_Track-124327: X_2_1
+        L79861_Track-124334: X_2_2
+        L79862_Track-124340: X_2_3
+        L79863_Track-124330: X_3_1
+        L79864_Track-124332: X_3_2
+        L79865_Track-124372: X_3_3
+        L79866_Track-124335: X_4_1
+        L79867_Track-124342: X_4_2
+        L79868_Track-124328: X_4_3
+        L79869_Track-124356: wt_1_1
+        L79870_Track-124349: wt_1_2
+        L79871_Track-124355: wt_1_3
+        L79872_Track-124343: wt_2_1
+        L79873_Track-124359: wt_2_2
+        L79874_Track-124353: wt_2_3
+        L79875_Track-124358: wt_3_1
+        L79876_Track-124351: wt_3_2
+        L79877_Track-124352: wt_3_3
+        L79878_Track-124347: wt_4_1
+        L79879_Track-124346: wt_4_2
+        L79880_Track-124345: wt_4_3

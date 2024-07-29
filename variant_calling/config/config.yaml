@@ -1,0 +1,52 @@
+#################################################
+# references
+#################################################
+ref_dir: "lib/"
+ref_ext: ".fa"
+ref_genome: "lib/schMedS3_h1.fa"
+#################################################
+# general parameters
+#################################################
+
+trimmomatic_args: "ILLUMINACLIP:./workflow/resources/illumina_adapters.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:35"
+# Version of databases to be used
+# adress for the current uniprot ftp
+uniprot_version: "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/Reference_Proteomes_2021_02.tar.gz"
+threads_kraken2: 30
+threads_jellyfish: 100
+threads_kat: 15
+threads_pbmarkdup: 30
+threads_mm2: 30
+bwa_threads: 50
+threads_HaplotypeCaller: 20
+threads_trimmomatic: 30
+threads_freebayes: 128
+
+PE_read_length: 100
+
+PE_fb_ref:
+  - "schMedS3_h1"
+  - "schMedS3_h2"
+
+PE_fb_selection:
+  - "sex_A"
+  - "sex_B"
+  - "sex_C"
+
+PE:
+  - "sex_A"
+  - "sex_B"
+  - "sex_C"
+
+SNP_hardfilter: 
+  - "QD < 2.0"
+  - "QUAL < 30.0"
+  - "SOR > 3.0"
+  - "FS > 60.0"
+  - "MQ < 40.0"
+  - "MQRankSum < -12.5"
+  - "ReadPosRankSum < -8.0"
+SNP_hardfilter_name: "SNP_filter01"
+
+INDEL_hardfilter: "QD < 2.0 && QUAL < 30.0 && FS > 200.0 && ReadPosRankSum < -20"
+INDEL_hardfilter_name: "INDEL_filter01"

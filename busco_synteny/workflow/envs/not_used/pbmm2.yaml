@@ -1,0 +1,4 @@
+channels:
+ - bioconda
+dependencies:
+ - pbmm2=1.4.0

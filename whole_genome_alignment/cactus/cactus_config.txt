@@ -1,0 +1,8 @@
+((((schMedA2h1:0.1,schMedA2h2:0.1):0.1,(schMedS3h1:0.1,schMedS3h2:0.1):0.1):0.2,schPol2:0.4):0.2,(schLug1:0.3, schNov1:0.3):0.3);
+schMedA2h1 cactus/schMedA2_h1.fa.masked
+schMedA2h2 cactus/schMedA2_h2.fa.masked
+schMedS3h1 cactus/schMedS3_h1.fa.masked
+schMedS3h2 cactus/schMedS3_h2.fa.masked
+schPol2 cactus/schPol2.fa.masked
+schLug1 cactus/schLug1.fa.masked
+schNov1 cactus/schNov1.fa.masked

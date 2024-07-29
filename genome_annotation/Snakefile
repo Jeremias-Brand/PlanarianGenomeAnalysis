@@ -1,0 +1,31 @@
+configfile: "config/config.yaml"
+
+include: "workflow/rules/basics.smk"
+
+# run rule all_gzip at the end of a run.
+#
+# Mappability takes a while...
+rule all:
+    input:
+        expand("02_general/{GE}/done__03_genomescope", GE = config['genomes_size_names']),
+        "02_general/done__02_general",
+        expand("01_rm/done__rm_{GE}", GE = config['genomes']),
+        expand("01_satDNA/{GE}_satDNA_min1k.gff3", GE = config['genomes']),
+        expand("01_srf/{GE}_srf.bed", GE = config['genomes']),
+        expand("01_busco/done__busco_{GE}", GE=config['genomes']),
+        expand("01_quast/{GE}", GE = config['genomes']),
+        expand("01_assembly_stats/{GE}.stats", GE = config['genomes']),
+        expand("01_mappability/done__{GE}_bw", GE = config['genomes']),
+        expand("01_blastn_mito/done__{GE}_blastn_mito", GE = config['genomes']),
+        expand("01_mappability/{GE}_khmer_genome_size.pdf", GE = config['genomes']),
+        expand("01_EDTA/{GE}", GE = config['genomes']),
+        expand("01_barrnap/{GE}_rRNA.gff", GE = config['genomes']),
+        expand("01_EDTA/done__{GE}", GE = config['genomes'])
+
+rule hard_reset:
+    shell:
+        """
+        rm logs/*
+        rm -rdf 0*_*/*
+        """
+

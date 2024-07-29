@@ -1,0 +1,15 @@
+# BUSCO version is: 5.0.0 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2021-02-17, number of species: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /projects/jere/2022-busco-syn/lib/genomes/taenia_multiceps.PRJNA307624.fa
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:67.5%[S:67.2%,D:0.3%],F:6.7%,M:25.8%,n:954	   
+	644	Complete BUSCOs (C)			   
+	641	Complete and single-copy BUSCOs (S)	   
+	3	Complete and duplicated BUSCOs (D)	   
+	64	Fragmented BUSCOs (F)			   
+	246	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   

@@ -1,0 +1,11 @@
+configfile: "config/config.yaml"
+
+include: "workflow/rules/calling.smk"
+include: "workflow/rules/PE_GATK.smk"
+
+rule all:
+    input:
+        rules.PE_freebayes_gvcf_all.output,
+        rules.PE_multiqc.output,
+        "06_variation/done__PE_GATK_all"
+

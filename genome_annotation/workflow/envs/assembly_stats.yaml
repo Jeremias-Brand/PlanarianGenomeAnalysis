@@ -1,0 +1,4 @@
+channels:
+  - bioconda
+dependencies:
+  - "assembly-stats=1.0.1"

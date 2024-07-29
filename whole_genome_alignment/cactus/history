@@ -1,0 +1,2 @@
+# we used bedtools maskfasta with the assemblies and repeat annotations deposited at https://zenodo.org/records/11004547
+# these then served as the cactus input
